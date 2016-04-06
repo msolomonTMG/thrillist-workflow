@@ -6,7 +6,7 @@ require './jira_helpers'
 require './github_helpers'
 
 get '/' do
-  Thrillist Workflow
+  'Thrillist Workflow'
 end
 
 post '/payload' do
