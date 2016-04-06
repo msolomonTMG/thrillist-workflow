@@ -5,6 +5,10 @@ require './dev_variables' if File.exists?('./dev_variables.rb')
 require './jira_helpers'
 require './github_helpers'
 
+get '/' do
+  Thrillist Workflow
+end
+
 post '/payload' do
   #the type of event that happened in GitHub
   event = request.env["HTTP_X_GITHUB_EVENT"]
