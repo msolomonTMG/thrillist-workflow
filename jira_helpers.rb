@@ -143,7 +143,7 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
   end
 end
 
-def update_message_jira (jira_issues, pull_request, latest_commit_message, user)
+def update_message_jira (jira_issues, pull_request, latest_commit_message, pull_request_labels, user)
   #if someone entered a message in their pull request commit with #comment, it will
   #already show up in Jira so there is no need to post it with this app
   if latest_commit_message.scan(/(?:\s|^)([A-Za-z]+-[0-9]+).+(#comment)(?=\s|$)/).length > 0
@@ -153,11 +153,11 @@ def update_message_jira (jira_issues, pull_request, latest_commit_message, user)
   end
 
   #loop through all of the tickets associated with the pull request
-  #update with the comment of latest commit if necessary and then move to QA
+  #update with the comment of latest commit if necessary and then move to QA if there is a reviewed label on the PR
   i = 0;
   while (i < jira_issues.length) do
     jira_issue = jira_issues[i].join
-    if apply_comment == true
+    if apply_comment == true && pull_request_labels.find {|x| x["name"] == "reviewed"} != nil
       transition_issue jira_issue, QA_READY_ID, user, pull_request, "updated", latest_commit_message
     end
     i+=1
@@ -189,6 +189,7 @@ end
 # User is the person who made an action to trigger the transition
 # code_info is an optional array about the code that triggered this event (branches/pull requests)
 def transition_issue (jira_issue, update_to, user, *code_info)
+  puts "Transitioning #{jira_issue}"
   # JackThreads front end does not want these transitions anymore
   if jira_issue =~ /(?:|^)(JQWE-[0-9]+|PQ-[0-9]+)(?=|$)/i
     return false
@@ -246,6 +247,7 @@ def transition_issue (jira_issue, update_to, user, *code_info)
     puts url
     response = RestClient.post( url, data, JIRA_HEADERS )
   end
+  puts response.to_json
 
 end
 

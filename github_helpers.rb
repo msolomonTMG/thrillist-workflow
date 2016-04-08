@@ -22,12 +22,12 @@ def handle_github_pull_request (push)
   user = translate_github_user_to_jira_user github_user
   #the pull request that was actioned on
   pull_request = push["pull_request"]
+  #array of labels applied to this pull request
+  pull_request_labels = get_labels pull_request
   #jira issues associated with the pull request
   jira_issues = get_jira_issues pull_request, "pull_request"
 
   if action == "labeled"
-    #array of labels applied to this pull request
-    pull_request_labels = get_labels pull_request
     #the label that was just added to this pull request
     current_label = push["label"]["name"]
     #loop through all of the tickets and decide what to do based on the labels of this pull request
@@ -37,7 +37,7 @@ def handle_github_pull_request (push)
     #get latest commit message on pull request
     latest_commit_message = get_latest_commit_message pull_request, push["repository"]["commits_url"]
     #update jira ticket by moving to QA and commenting with the latest commit message
-    update_message_jira jira_issues, pull_request, latest_commit_message, user
+    update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels user
 
   elsif action == "opened"
     start_code_review jira_issues, pull_request, user
