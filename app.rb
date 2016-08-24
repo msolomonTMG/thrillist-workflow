@@ -6,6 +6,7 @@ require './jira_helpers'
 require './github_helpers'
 
 get '/' do
+  #comment to restart heroku
   'Thrillist Workflow'
 end
 
