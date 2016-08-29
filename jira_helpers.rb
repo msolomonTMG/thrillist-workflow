@@ -111,6 +111,8 @@ def translate_github_user_to_jira_user (github_user_object)
     user = "[~rshatkin]"
   when "emchale"
     user = "[~emchale]"
+  when "mpriscella"
+    user = "[~mpriscella]"
   end
 
   return user
