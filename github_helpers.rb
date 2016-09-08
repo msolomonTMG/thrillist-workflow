@@ -40,7 +40,10 @@ def handle_github_pull_request (push)
     update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
 
   elsif action == "opened"
-    start_code_review jira_issues, pull_request, user
+    #if a PR was opened with a label of "needs review", send the PR to code review else, do nothing
+    if pull_request_labels.find {|x| x["name"] == "needs review"} != nil
+      start_code_review jira_issues, pull_request, user
+    end
 
   elsif action == "closed"
     #if the pull request was merged, resolve the jira ticket
