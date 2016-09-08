@@ -20,6 +20,8 @@ QA_PASSED_ID           = "271"
 REVIEW_PASSED_ID       = "161"
 DEPLOY_READY_ID        = "221"
 PRODUCTION_VERIFIED_ID = "141"
+CLOSED_ID              = "131"
+RESOLVED_ID            = "231"
 
 #returns an array of jira issues associated with a pull request
 #if there are more jira issues in the pull request title than in the branch, return the issues in the title
@@ -188,6 +190,24 @@ def start_progress (jira_issues, user, branch)
   end
 end
 
+def resolve_issues(jira_issues, pull_request, user)
+  i = 0;
+  while (i < jira_issues.length) do
+    jira_issue = jira_issues[i].join
+    transition_issue jira_issue, RESOLVED_ID, user, pull_request
+    i+=1
+  end
+end
+
+def close_issues(jira_issues, pull_request, user)
+  i = 0;
+  while (i < jira_issues.length) do
+    jira_issue = jira_issues[i].join
+    transition_issue jira_issue, CLOSED_ID, user, pull_request
+    i+=1
+  end
+end
+
 # Accepts 1 Jira issue at a time
 # Transitions the issue to the transition ID "update_to"
 # User is the person who made an action to trigger the transition
@@ -218,6 +238,10 @@ def transition_issue (jira_issue, update_to, user, *code_info)
       body = "Code review passed by #{user} #{JIRA_REVIEW_IMAGE}"
     when DEPLOY_READY_ID
       body = "Deploy ready"
+    when RESOLVED_ID
+      body = "Deployed when #{user} merged [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] in Github"
+    when CLOSED_ID
+      body = "Closed when #{user} closed [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] in Github"
   end
 
   data = {
