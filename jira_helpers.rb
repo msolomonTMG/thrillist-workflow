@@ -132,6 +132,9 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
       if pull_request_labels.find {|x| x["name"] == "reviewed"} != nil
         transition_issue jira_issue, DEPLOY_READY_ID, user
       end
+    elsif current_label == "needs review" & jira_issue != nil
+      #move to In Code Review
+      transition_issue jira_issue, CODE_REVIEW_ID, user
     elsif current_label == "reviewed" && jira_issue != nil
       #move to reveiwed by user
       transition_issue jira_issue, QA_READY_ID, user

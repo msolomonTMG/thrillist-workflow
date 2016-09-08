@@ -36,7 +36,7 @@ def handle_github_pull_request (push)
   elsif action == "synchronize"
     #get latest commit message on pull request
     latest_commit_message = get_latest_commit_message pull_request, push["repository"]["commits_url"]
-    #update jira ticket by moving to QA and commenting with the latest commit message
+    #update jira ticket by moving to QA and commenting with the latest commit message if it's been reviewed
     update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
 
   elsif action == "opened"
