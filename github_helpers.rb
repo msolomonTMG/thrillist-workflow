@@ -44,7 +44,7 @@ def handle_github_pull_request (push)
 
   elsif action == "closed"
     #if the pull request was merged, resolve the jira ticket
-    if pull_request["merged_at"]
+    if pull_request["merged_at"] != nil
       resolve_issues jira_issues, pull_request, user
     #if the pull request was closed, close the jira ticket
     else
