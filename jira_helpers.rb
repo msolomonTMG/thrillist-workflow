@@ -191,6 +191,7 @@ def start_progress (jira_issues, user, branch)
 end
 
 def resolve_issues(jira_issues, pull_request, user)
+  puts "resolving issue"
   i = 0;
   while (i < jira_issues.length) do
     jira_issue = jira_issues[i].join

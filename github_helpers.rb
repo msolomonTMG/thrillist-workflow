@@ -43,7 +43,7 @@ def handle_github_pull_request (push)
     start_code_review jira_issues, pull_request, user
 
   elsif action == "closed"
-
+    puts "#{user} just closed #{pull_request["title"]}"
     resolve_issues jira_issues, pull_request, user
 
   end
