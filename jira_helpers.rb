@@ -210,6 +210,7 @@ def close_issues(jira_issues, pull_request, user)
 end
 
 def comment_jira_issues(jira_issues, comment, pull_request, user)
+  puts jira_issues
   jira_issues.each do |jira_issue|
     puts jira_issue
     url = JIRA_URL + jira_issue + "/comment"
