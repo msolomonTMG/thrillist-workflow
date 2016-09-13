@@ -49,6 +49,21 @@ def handle_github_pull_request (push)
   end
 end
 
+def handle_comment (push)
+  action = push["action"]
+  #the user who made the action to the pull request
+  github_user = get_github_data push["sender"]["url"]
+  user = translate_github_user_to_jira_user github_user
+  #the comment that was made
+  comment = push["comment"]
+  #pull request that this issue is associated with
+  pull_request = get_github_data push["issue"]["pull_request"]["url"]
+  #jira issues associated with the pull request
+  jira_issues = get_jira_issues pull_request, "pull_request"
+  #add the comment to jira issues
+  comment_jira_issues jira_issues, comment, pull_request, user
+end
+
 def get_github_data (url)
   data = JSON.parse( RestClient.get( url, {:params => {:access_token => ENV['GITHUB_TOKEN']}, :accept => :json} ) )
 
