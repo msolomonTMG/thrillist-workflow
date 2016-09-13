@@ -210,14 +210,16 @@ def close_issues(jira_issues, pull_request, user)
 end
 
 def comment_jira_issues(jira_issues, comment, pull_request, user)
-  puts jira_issues
-  jira_issues.each do |jira_issue|
-    puts jira_issue
+  i = 0;
+  while (i < jira_issues.length) do
+    jira_issue = jira_issues[i].join
+    
     url = JIRA_URL + jira_issue + "/comment"
     body = "#{user} commented on #{pull_request["title"]} in GitHub: {quote}#{comment}{quote}"
     data = { "body" => body }.to_json
 
     response = RestClient.post( url, data, JIRA_HEADERS )
+    i+=1
   end
 end
 
