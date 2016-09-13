@@ -213,7 +213,7 @@ def comment_jira_issues(jira_issues, comment, pull_request, user)
   jira_issues.each do |jira_issue|
     url = JIRA_URL + jira_issue + "/comment"
     body = "#{user} commented on #{pull_request["title"]} in GitHub: {quote}#{comment}{quote}"
-    data = { "body" => comment }.to_json
+    data = { "body" => body }.to_json
 
     response = RestClient.post( url, data, JIRA_HEADERS )
   end
