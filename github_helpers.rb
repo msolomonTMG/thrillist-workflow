@@ -55,7 +55,7 @@ def handle_comment (push)
   github_user = get_github_data push["sender"]["url"]
   user = translate_github_user_to_jira_user github_user
   #the comment that was made
-  comment = push["comment"]
+  comment = push["comment"]["body"]
   #pull request that this issue is associated with
   pull_request = get_github_data push["issue"]["pull_request"]["url"]
   #jira issues associated with the pull request
