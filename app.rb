@@ -21,6 +21,6 @@ post '/payload' do
   elsif event == "create" && push["ref_type"] == "branch"
     handle_github_branch push
   elsif event == "issue_comment"
-    handle_comment
+    handle_comment push
   end
 end
