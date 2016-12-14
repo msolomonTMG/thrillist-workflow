@@ -14,6 +14,20 @@ def handle_github_branch (push)
   start_progress jira_issues, user, branch
 end
 
+def handle_github_pull_request_review (push)
+  action = push["action"] #should always be "submitted"
+  pull_request = push["pull_request"]
+  review_state = push["review"]["state"]
+  github_user = get_github_data push["sender"]["url"] #user who reviewed the pr
+  user = translate_github_user_to_jira_user github_user
+  jira_issues = get_jira_issues pull_request, "pull_request"
+
+  if review_state == "approved"
+    code_reviewed_issues(jira_issues, pull_request, user)
+  end
+
+end
+
 def handle_github_pull_request (push)
   #the action that was taken
   action = push["action"]
