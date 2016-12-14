@@ -34,10 +34,13 @@ def handle_github_pull_request (push)
     update_label_jira jira_issues, current_label, pull_request_labels, user
 
   elsif action == "synchronize"
-    #get latest commit message on pull request
-    latest_commit_message = get_latest_commit_message pull_request, push["repository"]["commits_url"]
-    #update jira ticket by moving to QA and commenting with the latest commit message
-    update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
+    #if the PR is labeled with needs qa and the PR is updated, kick the ticket to In QA
+    if pull_request_labels.find {|x| x["name"] == "needs qa"} != nil
+      #get latest commit message on pull request
+      latest_commit_message = get_latest_commit_message pull_request, push["repository"]["commits_url"]
+      #update jira ticket by moving to QA and commenting with the latest commit message
+      update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
+    end
 
   elsif action == "opened"
     start_code_review jira_issues, pull_request, user
