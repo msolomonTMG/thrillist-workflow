@@ -18,6 +18,8 @@ post '/payload' do
   #if the event was a pull request, handle that differently than actions for branches
   if event == "pull_request"
     handle_github_pull_request push
+  elsif event == "pull_request_review"
+    handle_github_pull_request_review push
   elsif event == "create" && push["ref_type"] == "branch"
     handle_github_branch push
   elsif event == "issue_comment"

@@ -209,11 +209,20 @@ def close_issues(jira_issues, pull_request, user)
   end
 end
 
+def code_reviewed_issues(jira_issues, pull_request, user)
+  i = 0;
+  while (i < jira_issues.length) do
+    jira_issue = jira_issues[i].join
+    transition_issue jira_issue, REVIEW_PASSED_ID, user, pull_request
+    i+=1
+  end
+end
+
 def comment_jira_issues(jira_issues, comment, pull_request, user)
   i = 0;
   while (i < jira_issues.length) do
     jira_issue = jira_issues[i].join
-    
+
     url = JIRA_URL + jira_issue + "/comment"
     body = "#{user} commented on #{pull_request["title"]} in GitHub: {quote}#{comment}{quote}"
     data = { "body" => body }.to_json
