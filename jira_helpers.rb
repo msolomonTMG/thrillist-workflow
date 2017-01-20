@@ -140,7 +140,7 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
         transition_issue jira_issue, DEPLOY_READY_ID, user
       end
     elsif current_label == "needs review" && jira_issue != nil
-      transition_issue jira_issue, CODE_REVIEW_ID, user
+      transition_issue jira_issue, CODE_REVIEW_ID, user, pull_request, "labeled"
     elsif current_label == "needs qa" && jira_issue != nil
       if pull_request_labels.find {|x| x["name"] == "needs review"}
         #if someone labels this with need QA but it also needs review, do nothing
@@ -257,7 +257,11 @@ def transition_issue (jira_issue, update_to, user, *code_info)
     when START_PROGRESS_ID
       body = "Progress started when #{user} created branch: {{#{code_info[0]}}} in GitHub"
     when CODE_REVIEW_ID
-      body = "#{user} opened pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}]. Ready for Code Review"
+      if code_info[1] == "labeled"
+        body = "#{user} labeled pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] with \"needs review\""
+      else
+        body = "#{user} opened pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}]. Ready for Code Review"
+      end
     when QA_READY_ID
       if code_info[1] == "updated"
         body = "#{user} updated pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] with comment: \n bq. #{code_info[2]}"
