@@ -257,7 +257,7 @@ def transition_issue (jira_issue, update_to, user, *code_info)
     when START_PROGRESS_ID
       body = "Progress started when #{user} created branch: {{#{code_info[0]}}} in GitHub"
     when CODE_REVIEW_ID
-      if code_info[1] == "labeled"
+      if code_info[0] == "labeled"
         body = "#{user} labeled the pull request with \"needs review\""
       else
         body = "#{user} opened pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}]. Ready for Code Review"
@@ -265,7 +265,7 @@ def transition_issue (jira_issue, update_to, user, *code_info)
     when QA_READY_ID
       if code_info[1] == "updated"
         body = "#{user} updated pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] with comment: \n bq. #{code_info[2]}"
-      elsif code_info[1] == "labeled"
+      elsif code_info[0] == "labeled"
         body = "#{user} labeled pull request with \"needs qa\""
       else
         body = "Code review passed by #{user} #{JIRA_REVIEW_IMAGE}"
