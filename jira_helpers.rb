@@ -145,7 +145,7 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
       if pull_request_labels.find {|x| x["name"] == "needs review"}
         #if someone labels this with need QA but it also needs review, do nothing
       else
-        transition_issue jira_issue, QA_READY_ID, user
+        transition_issue jira_issue, QA_READY_ID, user, pull_request, "labeled"
       end
     elsif current_label == "Production verified" && jira_issue != nil
       #move to production verified by user
@@ -261,6 +261,8 @@ def transition_issue (jira_issue, update_to, user, *code_info)
     when QA_READY_ID
       if code_info[1] == "updated"
         body = "#{user} updated pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] with comment: \n bq. #{code_info[2]}"
+      elsif code_info[1] == "labeled"
+        body = "#{user} labeled pull request: [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] with \"needs qa\""
       else
         body = "Code review passed by #{user} #{JIRA_REVIEW_IMAGE}"
       end
