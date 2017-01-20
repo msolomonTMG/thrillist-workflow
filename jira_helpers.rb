@@ -139,6 +139,14 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
       if pull_request_labels.find {|x| x["name"] == "QAed"} != nil
         transition_issue jira_issue, DEPLOY_READY_ID, user
       end
+    elsif current_label == "needs review" && jira_issue != nil
+      transition_issue jira_issue, CODE_REVIEW_ID, user
+    elsif current_label == "needs qa" && jira_issue != nil
+      if pull_request_labels.find {|x| x["name"] == "needs review"}
+        #if someone labels this with need QA but it also needs review, do nothing
+      else
+        transition_issue jira_issue, QA_READY_ID, user
+      end
     elsif current_label == "Production verified" && jira_issue != nil
       #move to production verified by user
       transition_issue jira_issue, PRODUCTION_VERIFIED_ID, user
