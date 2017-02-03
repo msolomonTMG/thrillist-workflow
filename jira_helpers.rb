@@ -273,7 +273,7 @@ def update_jira_field (jira_issue, field, value, user)
       }
     }.to_json
   end
-
+  puts data
   return RestClient.post( url, data, JIRA_HEADERS )
 end
 
