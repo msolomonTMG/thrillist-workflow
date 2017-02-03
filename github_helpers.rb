@@ -15,15 +15,24 @@ def handle_github_branch (push)
 end
 
 def handle_github_pull_request_review (push)
-  action = push["action"] #should always be "submitted"
-  pull_request = push["pull_request"]
-  review_state = push["review"]["state"]
-  github_user = get_github_data push["sender"]["url"] #user who reviewed the pr
+  action = push["action"]
+  github_user = get_github_data push["sender"]["url"] #user who made gh change
   user = translate_github_user_to_jira_user github_user
+  pull_request = push["pull_request"]
   jira_issues = get_jira_issues pull_request, "pull_request"
 
-  if review_state == "approved"
-    code_reviewed_issues(jira_issues, pull_request, user)
+  if action == "submitted"
+    review_state = push["review"]["state"]
+
+    if review_state == "approved"
+      code_reviewed_issues(jira_issues, pull_request, user)
+    end
+
+  elsif action == "review_requested"
+    requested_reviewer = get_github_data push["requested_reviewer"]
+    jira_reviewer = translate_github_user_to_jira_user requested_reviewer
+    clean_jira_reviewer = clean_jira_username jira_reviewer # remove the [~ ] from the name
+    update_jira_reviewer jira_issues, user, clean_jira_reviewer
   end
 
 end

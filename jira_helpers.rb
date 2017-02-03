@@ -23,6 +23,9 @@ PRODUCTION_VERIFIED_ID = "141"
 CLOSED_ID              = "131"
 RESOLVED_ID            = "231"
 
+#Jira Custom Field IDs
+REVIEWER_FIELD_ID      = "customfield_12400"
+
 #returns an array of jira issues associated with a pull request
 #if there are more jira issues in the pull request title than in the branch, return the issues in the title
 def get_jira_issues (code, type)
@@ -122,6 +125,16 @@ def translate_github_user_to_jira_user (github_user_object)
   return user
 end
 
+def update_jira_reviewer (jira_issues, user, jira_reviewer)
+  i = 0
+  while (i < jira_issues.length) do
+    jira_issue = jira_issues[i].join
+    update_jira_field jira_issue, REVIEWER_FIELD_ID, jira_reviewer
+
+    i += 1
+  end
+end
+
 def update_label_jira (jira_issues, current_label, pull_request_labels, user)
   i = 0
   while (i < jira_issues.length) do
@@ -157,6 +170,10 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
     end
     i+=1
   end
+end
+
+def clean_jira_username (username)
+  return username.gsub!(/[~]/,'')
 end
 
 def update_message_jira (jira_issues, pull_request, latest_commit_message, pull_request_labels, user)
@@ -240,6 +257,24 @@ def comment_jira_issues(jira_issues, comment, pull_request, user)
     response = RestClient.post( url, data, JIRA_HEADERS )
     i+=1
   end
+end
+
+def update_jira_field (jira_issue, field, value, user)
+  url = JIRA_URL + jira_issue
+
+  if field == REVIEWER_FIELD_ID
+    data = {
+      "update" => {
+        field => [
+          {
+            "add" => "#{value}"
+          }
+        ]
+      }
+    }.to_json
+  end
+
+  return RestClient.post( url, data, JIRA_HEADERS )
 end
 
 # Accepts 1 Jira issue at a time
