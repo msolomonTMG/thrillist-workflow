@@ -29,10 +29,7 @@ def handle_github_pull_request_review (push)
     end
 
   elsif action == "review_requested"
-    requested_reviewer = get_github_data push["requested_reviewer"]
-    jira_reviewer = translate_github_user_to_jira_user requested_reviewer
-    clean_jira_reviewer = clean_jira_username jira_reviewer # remove the [~ ] from the name
-    update_jira_reviewer jira_issues, user, clean_jira_reviewer
+
   end
 
 end
@@ -64,6 +61,14 @@ def handle_github_pull_request (push)
       #update jira ticket by moving to QA and commenting with the latest commit message
       update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
     end
+
+  elsif action == "review_requested"
+    puts "REVIEWER CHANGED"
+    requested_reviewer = get_github_data push["requested_reviewer"]["url"]
+    puts "REQUESTED REVIEW #{requested_reviewer}"
+    jira_reviewer = translate_github_user_to_jira_user requested_reviewer
+    clean_jira_reviewer = clean_jira_username jira_reviewer # remove the [~ ] from the name
+    update_jira_reviewer jira_issues, user, clean_jira_reviewer
 
   elsif action == "opened"
     start_code_review jira_issues, pull_request, user

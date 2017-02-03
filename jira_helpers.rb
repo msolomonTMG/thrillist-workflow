@@ -126,10 +126,11 @@ def translate_github_user_to_jira_user (github_user_object)
 end
 
 def update_jira_reviewer (jira_issues, user, jira_reviewer)
+  puts "updating reviewer"
   i = 0
   while (i < jira_issues.length) do
     jira_issue = jira_issues[i].join
-    update_jira_field jira_issue, REVIEWER_FIELD_ID, jira_reviewer
+    update_jira_field jira_issue, REVIEWER_FIELD_ID, jira_reviewer, user
 
     i += 1
   end
@@ -173,7 +174,7 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
 end
 
 def clean_jira_username (username)
-  return username.gsub!(/[~]/,'')
+  return username.gsub!('~','').gsub('[', '').gsub(']', '')
 end
 
 def update_message_jira (jira_issues, pull_request, latest_commit_message, pull_request_labels, user)
