@@ -63,9 +63,7 @@ def handle_github_pull_request (push)
     end
 
   elsif action == "review_requested"
-    puts "REVIEWER CHANGED"
     requested_reviewer = get_github_data push["requested_reviewer"]["url"]
-    puts "REQUESTED REVIEW #{requested_reviewer}"
     jira_reviewer = translate_github_user_to_jira_user requested_reviewer
     clean_jira_reviewer = clean_jira_username jira_reviewer # remove the [~ ] from the name
     update_jira_reviewer jira_issues, user, clean_jira_reviewer

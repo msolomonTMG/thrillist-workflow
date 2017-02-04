@@ -24,7 +24,7 @@ CLOSED_ID              = "131"
 RESOLVED_ID            = "231"
 
 #Jira Custom Field IDs
-REVIEWER_FIELD_ID      = "customfield_12400"
+REVIEWER_FIELD_ID      = "customfield_12401"
 
 #returns an array of jira issues associated with a pull request
 #if there are more jira issues in the pull request title than in the branch, return the issues in the title
@@ -262,20 +262,14 @@ end
 
 def update_jira_field (jira_issue, field, value, user)
   url = JIRA_URL + jira_issue
+  #TODO: This probably will not work for other fields
+  data = {
+    "fields" => {
+      field => { "name" => "#{value}" }
+    }
+  }.to_json
 
-  if field == REVIEWER_FIELD_ID
-    data = {
-      "update" => {
-        field => [
-          {
-            "add" => "#{value}"
-          }
-        ]
-      }
-    }.to_json
-  end
-  puts data
-  return RestClient.post( url, data, JIRA_HEADERS )
+  return RestClient.put( url, data, JIRA_HEADERS )
 end
 
 # Accepts 1 Jira issue at a time
