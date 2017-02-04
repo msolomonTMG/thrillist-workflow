@@ -26,17 +26,23 @@ RESOLVED_ID            = "231"
 #Jira Custom Field IDs
 REVIEWER_FIELD_ID      = "customfield_12401"
 
-def jira_issue_updated (push)
+def handle_jira_issue_updated (push)
   changed_items = push["changelog"]["items"]
   i = 0
   while (i < changed_items.length) do
-    item = changed_items = changed_items[i].join
+    item = changed_items[i]
+    puts "i is #{i}"
     if item["field"] == "Reviewer"
       if item["to"] != ""
         github_reviewer = translate_jira_user_to_github_user item["to"]
+        pull_request_url = find_pull_request_with_key push["issue"]["key"]
 
+        if pull_request_url != false && github_reviewer != false
+          update_github_reviewer pull_request_url, github_reviewer
+        end
       end
     end
+    i += 1
   end
 end
 

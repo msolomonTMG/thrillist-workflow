@@ -116,7 +116,7 @@ def get_latest_commit_message (pull_request, commits_url)
   return latest_commit_message
 end
 
-def translate_github_user_to_jira_user (jira_user)
+def translate_jira_user_to_github_user (jira_user)
   case jira_user
   when "msolomon"
     return "msolomonTMG"
@@ -144,5 +144,36 @@ def translate_github_user_to_jira_user (jira_user)
     return "mpriscella"
   when "vtapia"
     return "vtapia5070"
+  else
+    return false
   end
+end
+
+def update_github_reviewer (pull_request_url, reviewer)
+  url = pull_request_url + "/requested_reviewers?access_token=#{ENV['GITHUB_TOKEN']}"
+  data = { "reviewers" => ["#{reviewer}"] }.to_json
+  puts data
+  puts url
+  result = JSON.parse(RestClient.post(url, data, { :Accept => 'application/vnd.github.black-cat-preview+json' }))
+  puts result
+end
+
+def find_pull_request_with_key (key)
+  puts "finding Pr"
+  url = "https://api.github.com/search/issues?q=user:thrillist+type:pr+is:open+#{key}&access_token=#{ENV['GITHUB_TOKEN']}"
+  results = JSON.parse(RestClient.get(url))
+
+  if results["total_count"] == 0
+    #TODO: change this URL to be discovery
+    url = "https://api.github.com/search/issues?q=user:msolomonTMG+type:pr+is:open+#{key}&access_token=#{ENV['GITHUB_TOKEN']}"
+    results = JSON.parse(RestClient.get(url))
+    if results["total_count"] == 0
+      return false
+    else
+      return results["items"][0]["pull_request"]["url"]
+    end
+  else
+    return results["items"][0]["pull_request"]["url"]
+  end
+
 end

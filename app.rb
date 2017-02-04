@@ -31,6 +31,6 @@ post '/jira' do
   push = JSON.parse(request.body.read)
   event = push["webhookEvent"]
   if event == "jira:issue_updated"
-    handle jira_issue_updated push
+    handle_jira_issue_updated push
   end
 end
