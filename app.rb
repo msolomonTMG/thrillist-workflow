@@ -26,3 +26,11 @@ post '/payload' do
     handle_comment push
   end
 end
+
+post '/jira' do
+  push = JSON.parse(request.body.read)
+  event = push["webhookEvent"]
+  if event == "jira:issue_updated"
+    handle jira_issue_updated push
+  end
+end

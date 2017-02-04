@@ -26,6 +26,20 @@ RESOLVED_ID            = "231"
 #Jira Custom Field IDs
 REVIEWER_FIELD_ID      = "customfield_12401"
 
+def jira_issue_updated (push)
+  changed_items = push["changelog"]["items"]
+  i = 0
+  while (i < changed_items.length) do
+    item = changed_items = changed_items[i].join
+    if item["field"] == "Reviewer"
+      if item["to"] != ""
+        github_reviewer = translate_jira_user_to_github_user item["to"]
+
+      end
+    end
+  end
+end
+
 #returns an array of jira issues associated with a pull request
 #if there are more jira issues in the pull request title than in the branch, return the issues in the title
 def get_jira_issues (code, type)
@@ -70,50 +84,26 @@ def translate_github_user_to_jira_user (github_user_object)
     user = "[~kpeltzer]"
   when "ken"
     user = "[~kpeltzer]"
-  when "gilchenzion"
-    user = "[~gchenzion]"
-  when "deanmazurek"
-    user = "[~dean]"
   when "kwadwo"
     user = "[~kboateng]"
   when "tarasiegel"
     user = "[~tsiegel]"
   when "samiamorwas"
     user = "[~mhaarhaus]"
-  when "cahalanej"
-    user = "[~jcahalane]"
-  when "bdeane"
-    user = "[~brian-thrillist]"
-  when "jay"
-    user = "[~jchinthrajah]"
-  when "jay-thrillist"
-    user = "[~jchinthrajah]"
   when "patrick"
     user = "[~plange]"
   when "pfunklange"
     user = "[~plange]"
-  when "mvujovic-thrillist"
-    user = "[~mvujovic]"
-  when "mattdoyle"
-    user = "[~matt]"
-  when "laurenashpole"
-    user = "[~lashpole]"
   when "stefsic"
     user = "[~ssicurelli]"
-  when "mga226"
-    user = "[~macreman]"
   when "lmon"
     user = "[~lukemonaco]"
   when "schuylerpenny"
     user = "[~spenny]"
-  when "rhinoray29"
-    user = "[~rshatkin]"
   when "khalid-richards"
     user = "[~krichards]"
   when "THRILL-jacinto"
     user = "[~jacinto]"
-  when "rachel-thrillist"
-    user = "[~rshatkin]"
   when "emchale"
     user = "[~emchale]"
   when "mpriscella"

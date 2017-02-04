@@ -115,3 +115,33 @@ def get_latest_commit_message (pull_request, commits_url)
 
   return latest_commit_message
 end
+
+def translate_github_user_to_jira_user (jira_user)
+  case jira_user
+  when "msolomon"
+    return "msolomonTMG"
+  when "kboateng"
+    return "kwadwo"
+  when "tsiegel"
+    return "tarasiegel"
+  when "mhaarhaus"
+    return "samiamorwas"
+  when "plange"
+    return "pfunklange"
+  when "ssicurelli"
+    return "stefsic"
+  when "lukemonaco"
+    return "lmon"
+  when "spenny"
+    return "schuylerpenny"
+  when "krichards"
+    return "khalid-richards"
+  when "jacinto"
+    return "THRILL-jacinto"
+  when "emchale"
+    return "emchale"
+  when "mpriscella"
+    return "mpriscella"
+  when "vtapia"
+    return "vtapia5070"
+end
