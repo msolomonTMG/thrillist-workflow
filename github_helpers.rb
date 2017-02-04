@@ -144,4 +144,5 @@ def translate_github_user_to_jira_user (jira_user)
     return "mpriscella"
   when "vtapia"
     return "vtapia5070"
+  end
 end
