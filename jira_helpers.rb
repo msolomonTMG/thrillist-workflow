@@ -116,6 +116,10 @@ def translate_github_user_to_jira_user (github_user_object)
     user = "[~mpriscella]"
   when "vtapia5070"
     user = "[~vtapia]"
+  when "jaepage"
+    user = "[~jpage]"
+  when "benlongstaff"
+    user = "[~blongstaff]"
   end
 
   return user
