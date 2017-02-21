@@ -332,7 +332,7 @@ def transition_issue (jira_issue, update_to, user, *code_info)
   #figure out if this issue is able to be transitioned to where we want it to go
   #if we can transition it, post to JIRA, if we can't then don't send anything
   available_transitions = JSON.parse( RestClient.get( url, JIRA_HEADERS ) )
-  able_to_transition = is_able_to_transition update_to, available_transitions
+  able_to_transition = is_able_to_transition jira_issue, update_to, available_transitions
 
   if able_to_transition == true
     response = RestClient.post( url, data, JIRA_HEADERS )
@@ -350,13 +350,15 @@ def transition_issue (jira_issue, update_to, user, *code_info)
 end
 
 #returns true if the ticket's available transitions includes the transition that we want to update to
-def is_able_to_transition(update_to, available_transitions)
+#and the target transition is not the tickets current status
+def is_able_to_transition(jira_issue, update_to, available_transitions)
   able_to_transition = false
+  issue_data = JSON.parse( RestClient.get( JIRA_URL + jira_issue, JIRA_HEADERS ) )
 
   i = 0
   while (i < available_transitions["transitions"].length ) do
     available_transition = available_transitions["transitions"][i]
-    if available_transition["id"] == update_to
+    if available_transition["id"] == update_to && issue_data["fields"]["status"]["name"] != available_transition["name"]
       able_to_transition = true
       i += available_transitions["transitions"].length
     end
