@@ -336,14 +336,14 @@ def transition_issue (jira_issue, update_to, user, *code_info)
 
   if able_to_transition == true
     response = RestClient.post( url, data, JIRA_HEADERS )
-  else #TODO: might want to get rid of this else stuff
-    puts "cannot transition this ticket"
-    # remove the transition property and just comment on the ticket
-    data = { "body" => body }.to_json
-    url = url.split("/transitions")[0] + "/comment"
-    puts data
-    puts url
-    response = RestClient.post( url, data, JIRA_HEADERS )
+  # else #TODO: might want to get rid of this else stuff that comments even when there is no transition
+  #   puts "cannot transition this ticket"
+  #   # remove the transition property and just comment on the ticket
+  #   data = { "body" => body }.to_json
+  #   url = url.split("/transitions")[0] + "/comment"
+  #   puts data
+  #   puts url
+  #   response = RestClient.post( url, data, JIRA_HEADERS )
   end
 
 end

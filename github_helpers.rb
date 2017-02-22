@@ -52,6 +52,11 @@ def handle_github_pull_request (push)
     current_label = push["label"]["name"]
     #loop through all of the tickets and decide what to do based on the labels of this pull request
     update_label_jira jira_issues, current_label, pull_request_labels, user
+    #some branches have complementary prs in other repos, we should keep the QA labels in sync (not code review)
+    if current_label == "needs qa" || current_label == "QAed"
+      puts "gonna sync the github labels"
+      sync_github_label_in_complementary_pr current_label, push
+    end
 
   elsif action == "synchronize"
     #if the PR is labeled with needs qa and the PR is updated, kick the ticket to In QA
@@ -176,6 +181,83 @@ def update_github_reviewer (pull_request_url, reviewer)
   puts url
   result = JSON.parse(RestClient.post(url, data, { :Accept => 'application/vnd.github.black-cat-preview+json' }))
   puts result
+end
+
+def sync_github_label_in_complementary_pr (label, push)
+  puts "sync_github_label_in_complementary_pr"
+
+  branch = push["pull_request"]["head"]["ref"]
+  repo = push["repository"]["name"]
+  org = push["repository"]["full_name"].split("/")[0]
+  user = push["pull_request"]["user"]["login"]
+
+  if repo == "Thrillist" || repo == "Seeker"
+    # get the complementary Pinnacle PR
+    complementary_pr = find_pull_request_by_branch branch, org, "Pinnacle"
+
+  elsif repo == "Pinnacle"
+    # try getting the complementary PR from each company repo -- only if the bot did not do the labeling
+    #if action user is not github bot
+    complementary_pr = find_pull_request_by_branch branch, org, "Thrillist"
+    if complementary_pr == false
+      complementary_pr = find_pull_request_by_branch branch, org, "Seeker"
+    end
+  end
+
+  puts complementary_pr["title"]
+
+  if complementary_pr != false
+    complementary_pr_labels = get_labels complementary_pr
+    #if the complementary pr already has the label, do nothing
+    if complementary_pr_labels.find {|x| x["name"] == label} != nil
+      return false
+    else
+      i = 0
+      replacement_labels = [] #all current labels, replace "needs qa" with "QAed" and vice versa
+      while (i < complementary_pr_labels.length) do
+        this_label = complementary_pr_labels[i]["name"]
+        skipThisLabel = (this_label == "QAed" && label == "needs qa") || (this_label == "needs qa" && label == "QAed")
+
+        if this_label != label && !skipThisLabel
+          replacement_labels.push(this_label)
+        end
+        i+=1
+      end
+      replacement_labels.push(label)
+
+      #label_pull_request label, complementary_pr
+      label_pull_request replacement_labels, complementary_pr
+    end
+  end
+end
+
+def label_pull_request (labels, pull_request)
+  puts "label_pull_request"
+  puts "labels are #{labels}"
+  puts "pull request url is #{pull_request['_links']['issue']['href']}/labels"
+  url = pull_request["_links"]["issue"]["href"] + "/labels"
+  #data = "[\"#{label_name}\"]"
+  # data = labels
+  # puts data
+  data = labels.to_s
+  puts data
+  response = JSON.parse(RestClient.put(url + "?access_token=#{ENV['GITHUB_TOKEN']}", data))
+  puts response.to_json
+end
+
+def find_pull_request_by_branch (branch, org, repo)
+  puts "find_pull_request_by_branch"
+  puts "https://api.github.com/repos/#{org}/#{repo}/pulls?access_token=#{ENV['GITHUB_TOKEN']}"
+  results = JSON.parse(RestClient.get("https://api.github.com/repos/#{org}/#{repo}/pulls?access_token=#{ENV['GITHUB_TOKEN']}"))
+  i = 0;
+  while (i < results.length) do
+    result = results[i]
+    if result["head"]["ref"] == branch
+      return result
+    end
+    i+=1
+  end
+  return false
 end
 
 def find_pull_request_with_key (key)
