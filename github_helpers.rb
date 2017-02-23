@@ -78,8 +78,9 @@ def handle_github_pull_request (push)
 
   elsif action == "closed"
     puts "#{user} just closed #{pull_request["title"]}"
-    resolve_issues jira_issues, pull_request, user
-
+    if pull_request["merged"] == true
+      resolve_issues jira_issues, pull_request, user
+    end
   end
 end
 
