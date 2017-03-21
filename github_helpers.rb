@@ -170,6 +170,8 @@ def translate_jira_user_to_github_user (jira_user)
     return "scott-thrillist"
   when "jpage"
     return "jaepage"
+  when "vrozman"
+    return "vitaly-rozman"
   else
     return false
   end
