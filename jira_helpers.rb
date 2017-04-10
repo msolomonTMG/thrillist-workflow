@@ -35,10 +35,22 @@ def handle_jira_issue_updated (push)
     if item["field"] == "Reviewer"
       if item["to"] != ""
         github_reviewer = translate_jira_user_to_github_user item["to"]
-        pull_request_url = find_pull_request_with_key push["issue"]["key"]
+        pull_request = find_pull_request_with_key push["issue"]["key"]
 
-        if pull_request_url != false && github_reviewer != false
-          update_github_reviewer pull_request_url, github_reviewer
+        if pull_request != false && github_reviewer != false
+          update_github_reviewer pull_request["url"], github_reviewer
+        end
+      end
+    elsif item["field"] == "status" && item["toString"] == "QA Approved"
+      puts "#{push["issue"]["key"]} was moved to QA Approved"
+      pull_request = find_pull_request_with_key push["issue"]["key"]
+
+      if pull_request != false
+        pull_request_labels = get_labels pull_request
+
+        if pull_request_labels.find {|x| x["name"] == "QAed"} == nil
+          pull_request_labels.push("QAed")
+          label_pull_request pull_request_labels, pull_request
         end
       end
     end
