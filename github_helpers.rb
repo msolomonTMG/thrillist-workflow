@@ -275,10 +275,16 @@ def find_pull_request_with_key (key)
     if results["total_count"] == 0
       return false
     else
-      return JSON.parse(RestClient.get(results["items"][0]["pull_request"]["url"]))
+      puts "getting PR with url: #{results["items"][0]["pull_request"]["url"]}"
+      pr = JSON.parse(RestClient.get(results["items"][0]["pull_request"]["url"]))
+      puts "got pr: #{pr}"
+      return pr
     end
   else
-    return JSON.parse(RestClient.get(results["items"][0]["pull_request"]["url"]))
+    puts "getting PR with url: #{results["items"][0]["pull_request"]["url"]}"
+    pr = JSON.parse(RestClient.get(results["items"][0]["pull_request"]["url"]))
+    puts "got pr: #{pr}"
+    return pr
   end
 
 end
