@@ -49,7 +49,7 @@ def handle_jira_issue_updated (push)
         pull_request_labels = get_labels pull_request
 
         if pull_request_labels.find {|x| x["name"] == "QAed"} == nil
-          repo_labels = get_repo_labels pull_request["head"]
+          repo_labels = get_repo_labels pull_request["head"]["repo"]
           puts "got my repo labels #{repo_labels}"
 
           qa_label = repo_labels.find {|l| l.name == "QAed" }
