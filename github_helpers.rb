@@ -113,13 +113,6 @@ def get_labels (pull_request)
   return labels
 end
 
-def get_repo_labels (repo)
-  labels_url = repo["labels_url"].split('{')[0]
-  labels = get_github_data labels_url
-
-  return labels
-end
-
 #returns message of the latest commit for a pull request
 def get_latest_commit_message (pull_request, commits_url)
   commit_info_url = commits_url.split('{')[0] + '/' + pull_request["head"]["sha"]
