@@ -113,6 +113,13 @@ def get_labels (pull_request)
   return labels
 end
 
+def get_repo_labels (repo)
+  labels_url = repo["labels_url"].split('{')[0]
+  labels = get_github_data labels_url
+
+  return labels
+end
+
 #returns message of the latest commit for a pull request
 def get_latest_commit_message (pull_request, commits_url)
   commit_info_url = commits_url.split('{')[0] + '/' + pull_request["head"]["sha"]
@@ -275,16 +282,10 @@ def find_pull_request_with_key (key)
     if results["total_count"] == 0
       return false
     else
-      puts "getting PR with url: #{results["items"][0]["pull_request"]["url"]}"
-      pr = JSON.parse(RestClient.get("#{results["items"][0]["pull_request"]["url"]}?access_token=#{ENV['GITHUB_TOKEN']}"))
-      puts "got pr: #{pr}"
-      return pr
+      return get_github_data results["items"][0]["pull_request"]["url"]
     end
   else
-    puts "getting PR with url: #{results["items"][0]["pull_request"]["url"]}"
-    pr = JSON.parse(RestClient.get("#{results["items"][0]["pull_request"]["url"]}?access_token=#{ENV['GITHUB_TOKEN']}"))
-    puts "got pr: #{pr}"
-    return pr
+    return get_github_data results["items"][0]["pull_request"]["url"]
   end
 
 end
