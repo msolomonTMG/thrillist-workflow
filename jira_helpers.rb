@@ -52,7 +52,7 @@ def handle_jira_issue_updated (push)
           repo_labels = get_repo_labels pull_request["head"]["repo"]
           puts "got my repo labels #{repo_labels}"
 
-          qa_label = repo_labels.index(repo_labels.find { |l| l["name"] == "QAed" })
+          qa_label = repo_labels.find { |l| l["name"] == "QAed" }
           puts "found qa label #{qa_label}"
 
           pull_request_labels.delete_if {|label| label["name"] == "needs qa"}
