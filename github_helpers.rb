@@ -270,7 +270,7 @@ def find_pull_request_with_key (key)
 
   if results["total_count"] == 0
     #TODO: change this URL to be discovery
-    url = "https://api.github.com/search/issues?q=user:msolomonTMG+type:pr+is:open+#{key}&access_token=#{ENV['GITHUB_TOKEN']}"
+    url = "https://api.github.com/search/issues?q=user:groupninemedia+type:pr+is:open+#{key}&access_token=#{ENV['GITHUB_TOKEN']}"
     results = JSON.parse(RestClient.get(url))
     if results["total_count"] == 0
       return false
