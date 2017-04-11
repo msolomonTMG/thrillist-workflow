@@ -275,10 +275,10 @@ def find_pull_request_with_key (key)
     if results["total_count"] == 0
       return false
     else
-      return results["items"][0]["pull_request"]
+      return JSON.parse(RestClient.get(results["items"][0]["pull_request"]["url"]))
     end
   else
-    return results["items"][0]["pull_request"]
+    return JSON.parse(RestClient.get(results["items"][0]["pull_request"]["url"]))
   end
 
 end
