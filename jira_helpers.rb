@@ -49,16 +49,19 @@ def handle_jira_issue_updated (push)
         pull_request_labels = get_labels pull_request
 
         if pull_request_labels.find_index {|x| x["name"] == "QAed"} == nil
-          repo_labels = get_repo_labels pull_request["head"]["repo"]
-          puts "got my repo labels #{repo_labels}"
+          #repo_labels = get_repo_labels pull_request["head"]["repo"]
+          #puts "got my repo labels #{repo_labels}"
 
-          qa_label = repo_labels.find { |l| l["name"] == "QAed" }
-          puts "found qa label #{qa_label}"
+          #qa_label = repo_labels.find { |l| l["name"] == "QAed" }
+          #puts "found qa label #{qa_label}"
 
           pull_request_labels.delete_if {|label| label["name"] == "needs qa"}
 
-          pull_request_labels.push(qa_label)
-          label_pull_request pull_request_labels, pull_request
+          labels = pull_request_labels.map { |l| l["name"] }
+          puts "labels before adding qaed #{labels}"
+          labels.push("QAed")
+          puts "labels is #{labels}"
+          label_pull_request labels, pull_request
         end
       end
     end
