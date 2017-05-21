@@ -319,12 +319,12 @@ def transition_issue (jira_issue, update_to, user, *code_info)
       elsif code_info[0] == "labeled"
         body = "#{user} labeled pull request with \"needs qa\""
       else
-        body = "Code review passed by #{user} #{JIRA_REVIEW_IMAGE}"
+        body = "Code review passed by #{user} (y)"
       end
     when QA_PASSED_ID
-      body = "QA passed by #{user} #{JIRA_QA_IMAGE}"
+      body = "QA passed by #{user} (y)"
     when REVIEW_PASSED_ID
-      body = "Code review passed by #{user} #{JIRA_REVIEW_IMAGE}"
+      body = "Code review passed by #{user} (y)"
     when DEPLOY_READY_ID
       body = "Deploy ready"
     when RESOLVED_ID
