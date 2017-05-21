@@ -7,7 +7,7 @@ JIRA_HEADERS = {
   :"Content-Type" => "application/json"
 }
 
-JIRA_URL = "https://thrillistmediagroup.atlassian.net/rest/api/latest/issue/"
+JIRA_URL = "https://nowthis.atlassian.net/rest/api/latest/issue/"
 JIRA_QA_IMAGE = "!https://webservices.tranware.net/TA/relay/success.png|height=48x,width=48px!"
 JIRA_REVIEW_IMAGE = "!http://www.devart.com/images/products/logos/large/review-assistant.png|height=48px,width=48px!"
 
