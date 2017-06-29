@@ -194,7 +194,7 @@ def sync_github_label_in_complementary_pr (label, push)
   org = push["repository"]["full_name"].split("/")[0]
   user = push["pull_request"]["user"]["login"]
 
-  if repo == "Thrillist" || repo == "Seeker"
+  if repo == "Thrillist" || repo == "Seeker" || repo == "Dodo"
     # get the complementary Pinnacle PR
     complementary_pr = find_pull_request_by_branch branch, org, "Pinnacle"
 
