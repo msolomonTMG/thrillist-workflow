@@ -297,8 +297,8 @@ end
 # code_info is an optional array about the code that triggered this event (branches/pull requests)
 def transition_issue (jira_issue, update_to, user, *code_info)
   puts "Transitioning #{jira_issue}"
-  # JackThreads front end does not want these transitions anymore
-  if jira_issue =~ /(?:|^)(JQWE-[0-9]+|PQ-[0-9]+)(?=|$)/i
+  # STRY front end does not want these transitions anymore
+  if jira_issue =~ /(?:|^)(STRY-[0-9]+)(?=|$)/i
     return false
   else
     url = JIRA_URL + jira_issue + "/transitions"
