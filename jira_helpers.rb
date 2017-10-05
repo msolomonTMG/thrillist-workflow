@@ -298,7 +298,7 @@ end
 def transition_issue (jira_issue, update_to, user, *code_info)
   puts "Transitioning #{jira_issue}"
   # STRY front end does not want these transitions anymore
-  if jira_issue =~ /(?:|^)(STRY-[0-9]+)(?=|$)/i
+  if jira_issue =~ /(?:|^)(STRY-[0-9]+)(?=|$)/i && user != "[~kboateng]"
     return false
   else
     url = JIRA_URL + jira_issue + "/transitions"
