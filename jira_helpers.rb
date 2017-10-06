@@ -15,9 +15,9 @@ JIRA_REVIEW_IMAGE = "!http://www.devart.com/images/products/logos/large/review-a
 #Jira Transition IDs
 START_PROGRESS_ID      = "181"
 CODE_REVIEW_ID         = "171"
-QA_READY_ID            = "151"
+QA_READY_ID            = "301"
 QA_PASSED_ID           = "271"
-REVIEW_PASSED_ID       = "161"
+REVIEW_PASSED_ID       = "301"
 DEPLOY_READY_ID        = "221"
 PRODUCTION_VERIFIED_ID = "141"
 CLOSED_ID              = "131"
