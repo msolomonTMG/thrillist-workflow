@@ -139,7 +139,7 @@ def translate_github_user_to_jira_user (github_user_object)
     user = "[~bblagojevic]"
   when "fabriceTOUSSAINT"
     user = "[~ftoussaint]"
-  when = "mdgreenwald"
+  when "mdgreenwald"
     user = "[~mgreenwald]"
   when "vitaly-rozman"
     user = "[~vrozman]"
