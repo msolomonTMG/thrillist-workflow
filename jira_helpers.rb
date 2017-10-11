@@ -48,8 +48,8 @@ def handle_jira_issue_updated (push)
       if pull_request != false
         pull_request_labels = get_labels pull_request
 
-        if pull_request_labels.find_index {|x| x["name"] == "QAed"} == nil
-          pull_request_labels.delete_if {|label| label["name"] == "needs qa"}
+        if pull_request_labels.find_index {|x| x["name"] =~ /QAed/i} == nil
+          pull_request_labels.delete_if {|label| label["name"] =~ /needs qa/i}
 
           labels = pull_request_labels.map { |l| l["name"] }
           puts "labels before adding qaed #{labels}"
@@ -168,20 +168,20 @@ def update_label_jira (jira_issues, current_label, pull_request_labels, user)
       #move to qaed by user
       transition_issue jira_issue, QA_PASSED_ID, user
       #if this ticket is also reviewed, move to deploy ready
-      if pull_request_labels.find {|x| x["name"] == "reviewed"} != nil
+      if pull_request_labels.find {|x| x["name"] =~ /reviewed/i} != nil
         transition_issue jira_issue, DEPLOY_READY_ID, user
       end
-    elsif current_label == "reviewed" && jira_issue != nil
+    elsif current_label =~ /reviewed/i && jira_issue != nil
       #move to reveiwed by user
       transition_issue jira_issue, QA_READY_ID, user
       #if this ticket is also QAed, move to deploy ready
-      if pull_request_labels.find {|x| x["name"] == "QAed"} != nil
+      if pull_request_labels.find {|x| x["name"] =~ /QAed/i} != nil
         transition_issue jira_issue, DEPLOY_READY_ID, user
       end
-    elsif current_label == "needs review" && jira_issue != nil
+    elsif current_label =~ /needs review/i && jira_issue != nil
       transition_issue jira_issue, CODE_REVIEW_ID, user, "labeled"
-    elsif current_label == "needs qa" && jira_issue != nil
-      if pull_request_labels.find {|x| x["name"] == "needs review"}
+    elsif current_label =~ /needs qa/i && jira_issue != nil
+      if pull_request_labels.find {|x| x["name"] =~ /needs review/i}
         #if someone labels this with need QA but it also needs review, do nothing
       else
         transition_issue jira_issue, QA_READY_ID, user, "labeled"
@@ -214,7 +214,7 @@ def update_message_jira (jira_issues, pull_request, latest_commit_message, pull_
   i = 0;
   while (i < jira_issues.length) do
     jira_issue = jira_issues[i].join
-    if apply_comment == true && pull_request_labels.find {|x| x["name"] == "reviewed"} != nil
+    if apply_comment == true && pull_request_labels.find {|x| x["name"] =~ /reviewed/i} != nil
       transition_issue jira_issue, QA_READY_ID, user, pull_request, "updated", latest_commit_message
     end
     i+=1
