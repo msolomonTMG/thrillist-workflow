@@ -166,6 +166,8 @@ def translate_jira_user_to_github_user (jira_user)
     return "emchale"
   when "kpeltzer"
     return "kpeltzer"
+  when "mmorel"
+    return "morelme"
   when "smehta"
     return "ohiosonia"
   when "sleonard"
