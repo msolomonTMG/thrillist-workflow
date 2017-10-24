@@ -21,7 +21,8 @@ REVIEW_PASSED_ID       = "301"
 DEPLOY_READY_ID        = "221"
 PRODUCTION_VERIFIED_ID = "141"
 CLOSED_ID              = "131"
-RESOLVED_ID            = "231"
+RESOLVED_ID            = "311"
+RESOLVED_ID_PLAT       = "321"
 
 #Jira Custom Field IDs
 REVIEWER_FIELD_ID      = "customfield_12401"
@@ -334,6 +335,10 @@ def transition_issue (jira_issue, update_to, user, *code_info)
     when DEPLOY_READY_ID
       body = "Deploy ready"
     when RESOLVED_ID
+      # stupid platform workflow has a different ID
+      if jira_issue =~ /PLAT/
+        update_to = RESOLVED_ID_PLAT
+      end
       body = "Deployed when #{user} merged [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] in Github"
     when CLOSED_ID
       body = "Closed when #{user} closed [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] in Github"
