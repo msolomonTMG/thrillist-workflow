@@ -44,8 +44,8 @@ def handle_jira_issue_updated (push)
           update_github_reviewer pull_request["url"], github_reviewer
         end
       end
-    elsif item["field"] == "status" && item["toString"] == "QA Approved"
-      puts "#{push["issue"]["key"]} was moved to QA Approved"
+    elsif item["field"] == "status" && item["toString"] == "Ready for Merge"
+      puts "#{push["issue"]["key"]} was moved to Ready for Merge"
       pull_request = find_pull_request_with_key push["issue"]["key"]
 
       if pull_request != false
