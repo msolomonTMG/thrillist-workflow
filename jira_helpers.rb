@@ -346,7 +346,7 @@ def transition_issue (jira_issue, update_to, user, *code_info)
       # stupid platform workflow has a different ID
       if jira_issue =~ /PLAT/
         update_to = RESOLVED_ID_PLAT
-      elsif jira_issue =~ /CE|MMD/
+      elsif jira_issue =~ /CE/
         update_to = MERGED_ID
       end
       body = "Deployed when #{user} merged [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] in Github"
