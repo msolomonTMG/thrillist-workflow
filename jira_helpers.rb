@@ -19,8 +19,10 @@ QA_READY_ID            = "301"
 QA_PASSED_ID           = "271"
 REVIEW_PASSED_ID       = "301"
 DEPLOY_READY_ID        = "221"
+MERGE_READY_ID         = "321"
 PRODUCTION_VERIFIED_ID = "141"
 CLOSED_ID              = "131"
+MERGED_ID              = "331"
 RESOLVED_ID            = "311"
 RESOLVED_ID_PLAT       = "321"
 
@@ -329,15 +331,23 @@ def transition_issue (jira_issue, update_to, user, *code_info)
         body = "Code review passed by #{user} (y)"
       end
     when QA_PASSED_ID
+      if jira_issue =~ /CE|MMD/
+        update_to = MERGE_READY_ID
+      end
       body = "QA passed by #{user} (y)"
     when REVIEW_PASSED_ID
       body = "Code review passed by #{user} (y)"
     when DEPLOY_READY_ID
+      if jira_issue =~ /CE|MMD/
+        update_to = MERGE_READY_ID
+      end
       body = "Deploy ready"
     when RESOLVED_ID
       # stupid platform workflow has a different ID
       if jira_issue =~ /PLAT/
         update_to = RESOLVED_ID_PLAT
+      elsif jira_issue =~ /CE|MMD/
+        update_to = MERGED_ID
       end
       body = "Deployed when #{user} merged [#{code_info[0]["title"]}|#{code_info[0]["html_url"]}] in Github"
     when CLOSED_ID
