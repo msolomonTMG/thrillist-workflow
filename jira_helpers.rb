@@ -306,7 +306,7 @@ end
 # code_info is an optional array about the code that triggered this event (branches/pull requests)
 def transition_issue (jira_issue, update_to, user, *code_info)
   puts "Transitioning #{jira_issue}"
-  # STRY front end does not want these transitions anymore
+  # Ops does not want these transitions anymore
   if jira_issue =~ /(?:|^)(GNOPS-[0-9]+)(?=|$)/i
     return false
   else
