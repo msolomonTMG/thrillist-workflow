@@ -16,6 +16,7 @@ JIRA_REVIEW_IMAGE = "!http://www.devart.com/images/products/logos/large/review-a
 START_PROGRESS_ID      = "181"
 CODE_REVIEW_ID         = "171"
 QA_READY_ID            = "301"
+IN_QA_ID               = "191"
 QA_PASSED_ID           = "271"
 REVIEW_PASSED_ID       = "301"
 DEPLOY_READY_ID        = "221"
@@ -329,6 +330,11 @@ def transition_issue (jira_issue, update_to, user, *code_info)
         body = "#{user} labeled pull request with \"needs qa\""
       else
         body = "Code review passed by #{user} (y)"
+      end
+      
+      # Ads got rid of their QA Ready state
+      if jira_issue =~ /ADS/
+        update_to = IN_QA_ID
       end
     when QA_PASSED_ID
       if jira_issue =~ /CE|MMD/
