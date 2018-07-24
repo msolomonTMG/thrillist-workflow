@@ -58,14 +58,15 @@ def handle_github_pull_request (push)
       sync_github_label_in_complementary_pr current_label, push
     end
 
-  elsif action == "synchronize"
-    #if the PR is labeled with needs qa and the PR is updated, kick the ticket to In QA
-    if pull_request_labels.find {|x| x["name"] == "needs qa"} != nil
-      #get latest commit message on pull request
-      latest_commit_message = get_latest_commit_message pull_request, push["repository"]["commits_url"]
-      #update jira ticket by moving to QA and commenting with the latest commit message
-      update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
-    end
+  # this action was being more of an annoyance than a feature
+  # elsif action == "synchronize"
+  #   #if the PR is labeled with needs qa and the PR is updated, kick the ticket to In QA
+  #   if pull_request_labels.find {|x| x["name"] == "needs qa"} != nil
+  #     #get latest commit message on pull request
+  #     latest_commit_message = get_latest_commit_message pull_request, push["repository"]["commits_url"]
+  #     #update jira ticket by moving to QA and commenting with the latest commit message
+  #     update_message_jira jira_issues, pull_request, latest_commit_message, pull_request_labels, user
+  #   end
 
   elsif action == "review_requested"
     requested_reviewer = get_github_data push["requested_reviewer"]["url"]
