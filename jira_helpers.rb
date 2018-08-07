@@ -308,7 +308,7 @@ end
 def transition_issue (jira_issue, update_to, user, *code_info)
   puts "Transitioning #{jira_issue}"
   # Ops does not want these transitions anymore
-  if jira_issue =~ /(?:|^)(GNOPS-[0-9]+)(?=|$)/i
+  if jira_issue =~ /(?:|^)(GNOPS-[0-9]+|DPU-[0-9]+)(?=|$)/i
     return false
   else
     url = JIRA_URL + jira_issue + "/transitions"
